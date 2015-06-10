@@ -1,0 +1,2 @@
+[cloud]
+cloud1 ansible_ssh_host=149.165.158.226 ansible_ssh_port=22

@@ -1,0 +1,27 @@
+---
+- name: test the cloud
+  hosts: cloud
+  vars:
+    localrc_address: http://goo.gl/OeOGqL
+  tasks:
+    - name: update
+      sudo: True
+      apt: update_cache=yes
+    - name: upgrade full
+      sudo: True
+      apt: upgrade=full
+    - name: upgrade dist
+      sudo: True
+      apt: upgrade=dist
+    - name: install git
+      sudo: True
+      apt: name=git
+    - name: cloning devstack
+      git: >
+        repo=https://github.com/openstack-dev/devstack.git 
+        dest=/home/ubuntu/icehouse
+        version=stable/icehouse
+    - name: configure localrc
+      command: chdir=/home/ubuntu/icehouse wget -O localrc {{localrc_address}}
+    - name: run script for devstack
+      command: chdir=/home/ubuntu/icehouse ./stack.sh

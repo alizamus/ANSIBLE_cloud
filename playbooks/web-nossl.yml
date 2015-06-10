@@ -1,0 +1,7 @@
+---
+- name: test the cloud
+  hosts: webservers
+  sudo: True
+  tasks:
+    - name: install git
+      apt: name=git update_cache=yes
