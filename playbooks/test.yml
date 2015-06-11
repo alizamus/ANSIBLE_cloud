@@ -24,4 +24,20 @@
     - name: configure localrc
       command: chdir=/home/ubuntu/icehouse wget -O localrc {{localrc_address}}
     - name: run script for devstack
-      command: chdir=/home/ubuntu/icehouse ./stack.sh
+      command: chdir=/home/ubuntu/icehouse ./stack.she
+      ignore_errors: yes
+    - name: set the time zone variables
+      sudo: True
+      copy: >
+        content='America/New_York'
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+        backup=yes
+      notify:
+        - update time zone
+  handlers:
+    - name: update time zone
+      sudo: True
+      command: dpkg-reconfigure --frontend noninteractive tzdata
