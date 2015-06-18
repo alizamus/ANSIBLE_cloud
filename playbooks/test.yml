@@ -37,8 +37,15 @@
         login_password=secret123
       with_sequence: count={{ number_of_projects }}
     #keystone_user: user=test tenant=lab password=test
-    #- name: apply the admin role to the test user
-    #  keystone_user: role=admin user=test tenant=lab
+    - name: apply the admin role to the test user
+      keystone_user_custom: >
+        role=admin 
+        user={{'user' + item }}
+        tenant={{'sandbox' + item }}
+        login_tenant_name=admin
+        login_user=admin
+        login_password=secret123
+      with_sequence: count={{ number_of_projects }}
   handlers:
     - name: update time zone
       sudo: True
