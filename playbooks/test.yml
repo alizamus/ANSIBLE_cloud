@@ -3,6 +3,7 @@
   hosts: cloud
   vars:
     localrc_address: http://goo.gl/OeOGqL
+    number_of_projects: 6
   tasks:
     - name: install git
       sudo: True
@@ -20,20 +21,22 @@
         - update time zone
     - name: creating a tenant
       keystone_user_custom: > 
-        tenant=sandbox1
-        tenant_description="tenant for user1" 
+        tenant={{'sandbox' + item }}
+        tenant_description="new tenant" 
         login_tenant_name=admin
         login_user=admin
         login_password=secret123
+      with_sequence: count={{ number_of_projects }}
     - name: assiggn user to the tenat
       keystone_user_custom: >
-        user=user1 
-        tenant=sandbox1
-        password=user1
+        user={{'user' + item }} 
+        tenant={{'sandbox' + item }}
+        password={{'user' + item }}
         login_tenant_name=admin
         login_user=admin
-        login_password=secret123 
-    #  keystone_user: user=test tenant=lab password=test
+        login_password=secret123
+      with_sequence: count={{ number_of_projects }}
+    #keystone_user: user=test tenant=lab password=test
     #- name: apply the admin role to the test user
     #  keystone_user: role=admin user=test tenant=lab
   handlers:
