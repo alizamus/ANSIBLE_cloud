@@ -1,33 +1,38 @@
 ---
 - name: test the cloud
   hosts: cloud
-  #gather_facts: no
   vars:
     localrc_address: http://goo.gl/OeOGqL
   tasks:
-    - name: sourcing the file
-      command: chdir=/home/ubuntu/icehouse "source openrc.sh"
+    - name: install git
+      sudo: True
+      apt: name=git
+    - name: set the time zone variables
+      sudo: True
+      copy: >
+        content='America/New_York'
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+        backup=yes
+      notify:
+        - update time zone
     - name: creating a tenant
-      command: keystone user-list
-      environment:
-          OS_USERNAME: admin
-          OS_TENANT_NAME: demo
-          OS_AUTH_URL: http://127.0.0.1:5000/v2.0
-          OS_PASSWORD: openstack
-    - name: test teh system
-      keystone_user_custom: >
-        user=ali 
-        tenant=demo 
-        password=juniper
-        login_tenant_name=demo
+      keystone_user_custom: > 
+        tenant=sandbox1
+        tenant_description="tenant for user1" 
+        login_tenant_name=admin
         login_user=admin
-        login_password=openstack
-      environment:
-          OS_USERNAME: admin
-          OS_TENANT_NAME: demo
-          OS_AUTH_URL: http://127.0.0.1:5000/v2.0
-          OS_PASSWORD: openstack
-    #- name: Create a user in keystone
+        login_password=secret123
+    - name: assiggn user to the tenat
+      keystone_user_custom: >
+        user=user1 
+        tenant=sandbox1
+        password=user1
+        login_tenant_name=admin
+        login_user=admin
+        login_password=secret123 
     #  keystone_user: user=test tenant=lab password=test
     #- name: apply the admin role to the test user
     #  keystone_user: role=admin user=test tenant=lab
