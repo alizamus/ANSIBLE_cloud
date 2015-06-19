@@ -46,6 +46,16 @@
         login_user=admin
         login_password=secret123
       with_sequence: count={{ number_of_projects }}
+    - name: Create a network for the users
+      neutron_network_custom: >
+        name={{'user' + item +'-net' }}
+        state=present
+        router_external=yes
+        login_username={{'user' + item }}
+        login_password={{'user' + item }}
+        login_tenant_name={{'sandbox' + item }}
+        auth_url='http://127.0.0.1:5000/v2.0/'
+      with_sequence: count={{ number_of_projects }}
   handlers:
     - name: update time zone
       sudo: True
