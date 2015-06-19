@@ -237,7 +237,8 @@ def _create_subnet(module, neutron):
             'gateway_ip': module.params['gateway_ip'],
             'dns_nameservers': module.params['dns_nameservers'],
             'network_id': _os_network_id,
-            'cidr': module.params['cidr'],
+            #'cidr': module.params['cidr'],
+            'cidr': '10.1.3.'+ str((int(module.params['user_number'])-1)*8) +'/29',
             'host_routes': module.params['host_routes'],
     }
     if module.params['allocation_pool_start'] and module.params['allocation_pool_end']:
@@ -304,6 +305,7 @@ def main():
             ipv6_ra_mode = dict(default=None, choices=ipv6_mode_choices),
             ipv6_address_mode = dict(default=None, choices=ipv6_mode_choices),
             host_routes = dict(default=None),
+            user_number = dict(required=True)
         ),
     )
     neutron = _get_neutron_client(module, module.params)

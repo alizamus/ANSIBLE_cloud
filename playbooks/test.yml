@@ -56,6 +56,19 @@
         login_tenant_name={{'sandbox' + item }}
         auth_url='http://127.0.0.1:5000/v2.0/'
       with_sequence: count={{ number_of_projects }}
+    - name: Create a subnet for the users
+      neutron_subnet_custom: >
+        state=present
+        login_username={{'user' + item }}
+        login_password={{'user' + item }}
+        login_tenant_name={{'sandbox' + item }}
+        tenant_name={{'sandbox' + item }}
+        network_name={{'user' + item +'-net' }}
+        name={{'user' + item +'-subnet' }}
+        cidr={{'10.1.3.' + item + '/29'}}
+        auth_url='http://127.0.0.1:5000/v2.0/'
+        user_number={{item}}
+      with_sequence: count={{ number_of_projects }}
   handlers:
     - name: update time zone
       sudo: True
