@@ -46,29 +46,34 @@
         login_user=admin
         login_password=secret123
       with_sequence: count={{ number_of_projects }}
-    - name: Create a network for the users
-      neutron_network_custom: >
-        name={{'user' + item +'-net' }}
-        state=present
-        router_external=yes
-        login_username={{'user' + item }}
-        login_password={{'user' + item }}
-        login_tenant_name={{'sandbox' + item }}
-        auth_url='http://127.0.0.1:5000/v2.0/'
-      with_sequence: count={{ number_of_projects }}
-    - name: Create a subnet for the users
-      neutron_subnet_custom: >
-        state=present
-        login_username={{'user' + item }}
-        login_password={{'user' + item }}
-        login_tenant_name={{'sandbox' + item }}
-        tenant_name={{'sandbox' + item }}
-        network_name={{'user' + item +'-net' }}
-        name={{'user' + item +'-subnet' }}
-        cidr={{'10.1.3.' + item + '/29'}}
-        auth_url='http://127.0.0.1:5000/v2.0/'
-        user_number={{item}}
-      with_sequence: count={{ number_of_projects }}
+    #- name: Create a network for the users
+    #  neutron_network_custom: >
+    #    name={{'user' + item +'-net' }}
+    #    state=present
+    #    router_external=yes
+    #    login_username={{'user' + item }}
+    #    login_password={{'user' + item }}
+    #    login_tenant_name={{'sandbox' + item }}
+    #    auth_url='http://127.0.0.1:5000/v2.0/'
+    #  with_sequence: count={{ number_of_projects }}
+    #- name: Create a subnet for the users
+    #  neutron_subnet_custom: >
+    #    state=present
+    #    login_username={{'user' + item }}
+    #    login_password={{'user' + item }}
+    #    login_tenant_name={{'sandbox' + item }}
+    #    tenant_name={{'sandbox' + item }}
+    #    network_name={{'user' + item +'-net' }}
+    #    name={{'user' + item +'-subnet' }}
+    #    cidr={{'10.1.3.' + item + '/29'}}
+    #    auth_url='http://127.0.0.1:5000/v2.0/'
+    #    user_number={{item}}
+    #  with_sequence: count={{ number_of_projects }}
+    - name: Clonning the Tony repository
+      sudo: True
+      git: >
+        repo=https://github.com/tonyliu0592/orch.git
+        dest=/root/code
   handlers:
     - name: update time zone
       sudo: True
