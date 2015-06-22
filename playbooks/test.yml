@@ -4,6 +4,7 @@
   vars:
     localrc_address: http://goo.gl/OeOGqL
     number_of_projects: 6
+    data_center_nummber: 3
   tasks:
     - name: install git
       sudo: True
@@ -75,7 +76,25 @@
         dest=/root/code
     - name: Adding an IPAM
       command: /root/code/config --username admin --password secret123 --tenant admin --api-server 127.0.0.1 add ipam ipam-default
-
+    - name: Create a network for the users
+      command: /root/code/add-network.py --user={{ item }} --datacenter=3
+      with_sequence: count={{ number_of_projects }}
+    - name: Create a floating ip pool for the users
+      command: /root/code/add-floating.py --user={{ item }} --datacenter=3
+      with_sequence: count={{ number_of_projects }}
+    - name: Create a subnet for the users
+      neutron_subnet_custom: >
+        state=present
+        login_username={{'user' + item }}
+        login_password={{'user' + item }}
+        login_tenant_name={{'sandbox' + item }}
+        tenant_name={{'sandbox' + item }}
+        network_name={{'user' + item +'-net' }}
+        name={{'user' + item +'-subnet' }}
+        cidr={{'10.1.3.' + item + '/29'}}
+        auth_url='http://127.0.0.1:5000/v2.0/'
+        user_number={{item}}
+      with_sequence: count={{ number_of_projects }}
   handlers:
     - name: update time zone
       sudo: True
