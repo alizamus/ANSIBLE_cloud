@@ -70,10 +70,12 @@
     #    user_number={{item}}
     #  with_sequence: count={{ number_of_projects }}
     - name: Clonning the Tony repository
-      sudo: True
       git: >
         repo=https://github.com/tonyliu0592/orch.git
         dest=/root/code
+    - name: Adding an IPAM
+      command: /root/code/config --username admin --password secret123 --tenant admin --api-server 127.0.0.1 add ipam ipam-default
+
   handlers:
     - name: update time zone
       sudo: True
