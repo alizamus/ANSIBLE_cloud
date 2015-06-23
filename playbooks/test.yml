@@ -1,10 +1,8 @@
 ---
 - name: test the cloud
   hosts: cloud
-  vars:
-    localrc_address: http://goo.gl/OeOGqL
-    number_of_projects: 6
-    data_center_nummber: 3
+  vars_files:
+    - config_vars.yml
   tasks:
     - name: install git
       apt: name=git
@@ -24,7 +22,7 @@
         tenant_description="new tenant" 
         login_tenant_name=admin
         login_user=admin
-        login_password=secret123
+        login_password={{ admin_pass }}
       with_sequence: count={{ number_of_projects }}
     - name: assiggn user to the tenat
       keystone_user_custom: >
@@ -33,9 +31,17 @@
         password={{'user' + item }}
         login_tenant_name=admin
         login_user=admin
-        login_password=secret123
+        login_password={{ admin_pass }}
       with_sequence: count={{ number_of_projects }}
-    #keystone_user: user=test tenant=lab password=test
+    - name: assiggn admin user to the projects
+      keystone_user_custom: >
+        user=admin
+        tenant={{'sandbox' + item }}
+        password={{ admin_pass }}
+        login_tenant_name=admin
+        login_user=admin
+        login_password={{ admin_pass }}
+      with_sequence: count={{ number_of_projects }}
     - name: apply the admin role to the test user
       keystone_user_custom: >
         role=admin 
@@ -43,7 +49,16 @@
         tenant={{'sandbox' + item }}
         login_tenant_name=admin
         login_user=admin
-        login_password=secret123
+        login_password={{ admin_pass }}
+      with_sequence: count={{ number_of_projects }}
+    - name: apply the admin role to admin user in each project
+      keystone_user_custom: >
+        role=admin 
+        user=admin
+        tenant={{'sandbox' + item }}
+        login_tenant_name=admin
+        login_user=admin
+        login_password={{ admin_pass }}
       with_sequence: count={{ number_of_projects }}
     - name: Create a network for the users
       neutron_network_custom: >
@@ -74,12 +89,12 @@
         dest=/root/code
         force=yes
     - name: Adding an IPAM
-      command: /root/code/config --username admin --password secret123 --tenant admin --api-server 127.0.0.1 add ipam ipam-default
+      command: /root/code/config --username admin --password {{ admin_pass }} --tenant admin --api-server 127.0.0.1 add ipam ipam-default
     - name: Create a network for the users
-      command: /root/code/add-network.py --user={{ item }} --datacenter=3
+      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber}}
       with_sequence: count={{ number_of_projects }}
     - name: Create a floating ip pool for the users
-      command: /root/code/add-floating.py --user={{ item }} --datacenter=3
+      command: /root/code/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber}}
       with_sequence: count={{ number_of_projects }}
     - name: Create a subnet for the users
       neutron_subnet_custom: >
