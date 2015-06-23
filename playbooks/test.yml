@@ -72,6 +72,7 @@
       git: >
         repo=https://github.com/alizamus/cloud-config.git
         dest=/root/code
+        force=yes
     - name: Adding an IPAM
       command: /root/code/config --username admin --password secret123 --tenant admin --api-server 127.0.0.1 add ipam ipam-default
     - name: Create a network for the users
