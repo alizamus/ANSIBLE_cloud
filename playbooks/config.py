@@ -15,12 +15,16 @@ if __name__ == '__main__':
 	data_center_num = input()
 	print 'Please enter the admin pass for openstack'
 	admin_pass = raw_input()
+	print 'Please enter the route target'
+	route_target = raw_input()
 	f = open('config_vars.yml', 'w')
 	f.write('number_of_projects: '+ str(num_of_projects))	
 	f.write('\n')
 	f.write('data_center_nummber: '+ str(data_center_num))
 	f.write('\n')
 	f.write('admin_pass: '+ admin_pass)
+	f.write('\n')
+	f.write('route_target: '+ route_target)
 	f.close()
 	print 'Enter the IP of the config node'
 	config_IP = raw_input()
