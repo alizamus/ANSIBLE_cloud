@@ -305,7 +305,7 @@ def main():
             ipv6_ra_mode = dict(default=None, choices=ipv6_mode_choices),
             ipv6_address_mode = dict(default=None, choices=ipv6_mode_choices),
             host_routes = dict(default=None),
-            user_number = dict(required=True)
+            user_number = dict(required=True),
             datacenter_number = dict(required=True)
         ),
     )
