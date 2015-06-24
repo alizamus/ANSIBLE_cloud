@@ -16,14 +16,14 @@
         backup=yes
       notify:
         - update time zone
-    - name: creating a tenant
+    - name: creating the tenants
       keystone_user_custom: > 
         tenant={{'sandbox' + item }}
         tenant_description="new tenant" 
         login_tenant_name=admin
         login_user=admin
         login_password={{ admin_pass }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: assiggn user to the tenat
       keystone_user_custom: >
         user={{'user' + item }} 
@@ -32,7 +32,7 @@
         login_tenant_name=admin
         login_user=admin
         login_password={{ admin_pass }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: assiggn admin user to the projects
       keystone_user_custom: >
         user=admin
@@ -41,7 +41,7 @@
         login_tenant_name=admin
         login_user=admin
         login_password={{ admin_pass }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: apply the admin role to the test user
       keystone_user_custom: >
         role=admin 
@@ -50,7 +50,7 @@
         login_tenant_name=admin
         login_user=admin
         login_password={{ admin_pass }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: apply the admin role to admin user in each project
       keystone_user_custom: >
         role=admin 
@@ -59,7 +59,7 @@
         login_tenant_name=admin
         login_user=admin
         login_password={{ admin_pass }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a network for the users
       neutron_network_custom: >
         name={{'user' + item +'-net' }}
@@ -69,7 +69,7 @@
         login_password={{'user' + item }}
         login_tenant_name={{'sandbox' + item }}
         auth_url='http://127.0.0.1:5000/v2.0/'
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     #- name: Create a subnet for the users
     #  neutron_subnet_custom: >
     #    state=present
@@ -91,11 +91,11 @@
     - name: Adding an IPAM
       command: /root/code/config --username admin --password {{ admin_pass }} --tenant admin --api-server 127.0.0.1 add ipam ipam-default
     - name: assigning the route target for the networks
-      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber }}  --r_target={{ route_target }}
-      with_sequence: count={{ number_of_projects }}
+      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber }}  --r_target={{ route_target }} --start_user={{ start_user }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a floating ip pool for the users
       command: /root/code/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber }}
-      with_sequence: count={{ number_of_projects }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a subnet for the users
       neutron_subnet_custom: >
         state=present
@@ -108,7 +108,8 @@
         auth_url='http://127.0.0.1:5000/v2.0/'
         user_number={{item}}
         datacenter_number={{ data_center_nummber }}
-      with_sequence: count={{ number_of_projects }}
+        start_user={{ start_user }}
+      with_sequence: start={{ start_user }} end={{ end_user }} stride=1
   handlers:
     - name: update time zone
       command: dpkg-reconfigure --frontend noninteractive tzdata

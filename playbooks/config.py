@@ -17,6 +17,10 @@ if __name__ == '__main__':
 	admin_pass = raw_input()
 	print 'Please enter the route target'
 	route_target = raw_input()
+	print 'Please enter the first user number to create'
+	start_user = raw_input()
+	print 'Please enter the final user number to create'
+	end_user = raw_input()
 	f = open('config_vars.yml', 'w')
 	f.write('number_of_projects: '+ str(num_of_projects))	
 	f.write('\n')
@@ -25,6 +29,10 @@ if __name__ == '__main__':
 	f.write('admin_pass: '+ admin_pass)
 	f.write('\n')
 	f.write('route_target: '+ route_target)
+	f.write('\n')
+	f.write('start_user: '+ start_user)
+	f.write('\n')
+	f.write('end_user: '+ end_user)
 	f.close()
 	print 'Enter the IP of the config node'
 	config_IP = raw_input()
