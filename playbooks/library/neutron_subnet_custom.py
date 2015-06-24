@@ -292,7 +292,7 @@ def main():
             region_name = dict(default=None),
             name = dict(required=True),
             network_name = dict(required=True),
-            cidr = dict(required=True),
+            cidr = dict(default=None),
             tenant_name = dict(default=None),
             state = dict(default='present', choices=['absent', 'present']),
             ip_version = dict(default='4', choices=['4', '6']),

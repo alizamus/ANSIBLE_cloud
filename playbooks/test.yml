@@ -105,7 +105,6 @@
         tenant_name={{'sandbox' + item }}
         network_name={{'user' + item +'-net' }}
         name={{'user' + item +'-subnet' }}
-        cidr={{'10.1.3.' + item + '/29'}}
         auth_url='http://127.0.0.1:5000/v2.0/'
         user_number={{item}}
         datacenter_number={{ data_center_nummber }}
