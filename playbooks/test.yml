@@ -62,7 +62,7 @@
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a network for the users
       neutron_network_custom: >
-        name={{'user' + item +'-net' }}
+        name={{'public-user' + item +'-net' }}
         state=present
         router_external=yes
         login_username={{'user' + item }}
@@ -103,8 +103,8 @@
         login_password={{'user' + item }}
         login_tenant_name={{'sandbox' + item }}
         tenant_name={{'sandbox' + item }}
-        network_name={{'user' + item +'-net' }}
-        name={{'user' + item +'-subnet' }}
+        network_name={{'public-user' + item +'-net' }}
+        name={{'public-user' + item +'-subnet' }}
         auth_url='http://127.0.0.1:5000/v2.0/'
         user_number={{item}}
         datacenter_number={{ data_center_nummber }}
