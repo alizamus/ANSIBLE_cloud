@@ -91,10 +91,10 @@
     - name: Adding an IPAM
       command: /root/code/config --username admin --password {{ admin_pass }} --tenant admin --api-server 127.0.0.1 add ipam ipam-default
     - name: assigning the route target for the networks
-      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber}}  --r_target={{route_target}}
+      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber }}  --r_target={{ route_target }}
       with_sequence: count={{ number_of_projects }}
     - name: Create a floating ip pool for the users
-      command: /root/code/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber}}
+      command: /root/code/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber }}
       with_sequence: count={{ number_of_projects }}
     - name: Create a subnet for the users
       neutron_subnet_custom: >
@@ -108,6 +108,7 @@
         cidr={{'10.1.3.' + item + '/29'}}
         auth_url='http://127.0.0.1:5000/v2.0/'
         user_number={{item}}
+        datacenter_number={{ data_center_nummber }}
       with_sequence: count={{ number_of_projects }}
   handlers:
     - name: update time zone
