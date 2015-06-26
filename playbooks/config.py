@@ -21,6 +21,12 @@ if __name__ == '__main__':
 	start_user = raw_input()
 	print 'Please enter the final user number to create'
 	end_user = raw_input()
+	print 'Do you want the images to be created? (yes or no)?'
+	image_q = raw_input()
+	if image_q == 'yes':
+		image_q == 'true'
+	else:
+		image_q == 'false'
 	f = open('config_vars.yml', 'w')
 	f.write('number_of_projects: '+ str(num_of_projects))	
 	f.write('\n')
@@ -33,6 +39,8 @@ if __name__ == '__main__':
 	f.write('start_user: '+ start_user)
 	f.write('\n')
 	f.write('end_user: '+ end_user)
+	f.write('\n')
+	f.write('image: '+ image_q)
 	f.close()
 	print 'Enter the IP of the config node'
 	config_IP = raw_input()

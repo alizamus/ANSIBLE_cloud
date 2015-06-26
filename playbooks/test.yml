@@ -110,6 +110,17 @@
         datacenter_number={{ data_center_nummber }}
         start_user={{ start_user }}
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
+    - name: copying the image files. Please wait. This task may take awhile
+      copy: >
+        src=/home/ali/copy/ 
+        dest=/root/images/
+        owner=root
+        group=root 
+        directory_mode=0755
+      when: image
+    - name: Running the glance commands to create images
+      command: chdir=/root/images/ bash training_install.sh
+      when: image
   handlers:
     - name: update time zone
       command: dpkg-reconfigure --frontend noninteractive tzdata
