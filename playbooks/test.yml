@@ -112,7 +112,7 @@
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: copying the image files. Please wait. This task may take awhile
       copy: >
-        src=/home/ali/copy/ 
+        src=~/copy/ 
         dest=/root/images/
         owner=root
         group=root 
