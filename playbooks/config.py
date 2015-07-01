@@ -24,9 +24,9 @@ if __name__ == '__main__':
 	print 'Do you want the images to be created? (yes or no)?'
 	image_q = raw_input()
 	if image_q == 'yes':
-		image_q == 'true'
+		image_q = 'true'
 	else:
-		image_q == 'false'
+		image_q = 'false'
 	f = open('config_vars.yml', 'w')
 	f.write('number_of_projects: '+ str(num_of_projects))	
 	f.write('\n')
