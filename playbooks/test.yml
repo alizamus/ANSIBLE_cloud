@@ -109,6 +109,7 @@
         user_number={{item}}
         datacenter_number={{ data_center_nummber }}
         start_user={{ start_user }}
+        manual_gateway=true
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: copying the image files. Please wait. This task may take awhile
       copy: >
