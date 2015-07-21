@@ -4,8 +4,8 @@
   vars_files:
     - config_vars.yml
   tasks:
-    - name: install git
-      apt: name=git
+    #- name: install git
+    #  apt: name=git
     - name: set the time zone variables
       copy: >
         content='America/New_York'
@@ -83,18 +83,26 @@
     #    auth_url='http://127.0.0.1:5000/v2.0/'
     #    user_number={{item}}
     #  with_sequence: count={{ number_of_projects }}
-    - name: Clonning the repository
-      git: >
-        repo=https://github.com/alizamus/cloud-config.git
+    #- name: Clonning the repository
+    #  git: >
+    #    repo=https://github.com/alizamus/cloud-config.git
+    #    dest=/root/code
+    #    force=yes
+    - name: copying the files
+      copy: >
+        src=/root/ANSIBLE_cloud/cloud-config 
         dest=/root/code
-        force=yes
+        owner=root
+        group=root
+        mode="u+rwx"
+        directory_mode=0755 
     - name: Adding an IPAM
-      command: /root/code/config --username admin --password {{ admin_pass }} --tenant admin --api-server 127.0.0.1 add ipam ipam-default
+      command: /root/code/cloud-config/config --username admin --password {{ admin_pass }} --tenant admin --api-server 127.0.0.1 add ipam ipam-default
     - name: assigning the route target for the networks
-      command: /root/code/add-network.py --user={{ item }} --datacenter={{ data_center_nummber }}  --r_target={{ route_target }} --start_user={{ start_user }}
+      command: /root/code/cloud-config/add-network.py --user={{ item }} --datacenter={{ data_center_nummber }}  --r_target={{ route_target }} --start_user={{ start_user }}
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a floating ip pool for the users
-      command: /root/code/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber }}
+      command: /root/code/cloud-config/add-floating.py --user={{ item }} --datacenter={{ data_center_nummber }}
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Create a subnet for the users
       neutron_subnet_custom: >
@@ -116,14 +124,14 @@
         src=~/copy/ 
         dest=/root/images/
         owner=root
-        group=root 
+        group=root
         directory_mode=0755
       when: image
     - name: Running the glance commands to create images
       command: chdir=/root/images/ bash training_install.sh
       when: image
     - name: cleaning the environment
-      command: /root/code/delete-floating.py --user={{ item }} --datacenter={{ data_center_nummber }} --pool=floating-ip-pool
+      command: /root/code/cloud-config/delete-floating.py --user={{ item }} --datacenter={{ data_center_nummber }} --pool=floating-ip-pool
       with_sequence: start={{ start_user }} end={{ end_user }} stride=1
     - name: Removing the additional directories
       command: rm -rf /root/code
